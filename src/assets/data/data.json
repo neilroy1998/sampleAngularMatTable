@@ -1,0 +1,26 @@
+[
+	{
+		"name": "John",
+		"subject": "Maths",
+		"marks": 50,
+		"passed": true
+	},
+	{
+		"name": "Paul",
+		"subject": "Phy",
+		"marks": 30,
+		"passed": false
+	},
+	{
+		"name": "George",
+		"subject": "History",
+		"marks": 70,
+		"passed": true
+	},
+	{
+		"name": "Ringo",
+		"subject": "Geo",
+		"marks": 90,
+		"passed": true
+	}
+]
