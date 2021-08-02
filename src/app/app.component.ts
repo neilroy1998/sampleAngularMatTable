@@ -2,6 +2,7 @@ import {ChangeDetectorRef, Component, OnInit, ViewChild} from '@angular/core';
 import {MatSort} from '@angular/material/sort';
 import {FormArray, FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {MatTable, MatTableDataSource} from "@angular/material/table";
+import {Subscription} from "rxjs";
 
 interface schoolMarks {
 	name: String,
@@ -15,7 +16,7 @@ interface schoolMarks {
 	templateUrl: './app.component.html',
 	styleUrls: ['./app.component.css']
 })
-export class AppComponent implements OnInit{
+export class AppComponent implements OnInit {
 
 	@ViewChild(MatSort) sort: MatSort;
 	@ViewChild('matTableSchool') matTableSchool: MatTable<any>;
@@ -33,6 +34,8 @@ export class AppComponent implements OnInit{
 
 	tableFormGroup: FormGroup;
 
+	subscription: Subscription[] = [];
+
 	constructor(private fb: FormBuilder,
 				private cdr: ChangeDetectorRef) {
 	}
@@ -47,8 +50,25 @@ export class AppComponent implements OnInit{
 		return ctrl as schoolMarks;
 	}
 
-	logger(data: schoolMarks) {
-		console.log(data);
+	logger(i: number) {
+		for (let i = 0; i < this.tableData.data.length; i++) {
+			this.subscription.forEach((sub) => {
+				sub.unsubscribe();
+			})
+		}
+
+		const data = this.tableFormGroup.get("rows").value[i];
+		this.tableData.data.push(data);
+		this.tableData.data.splice(i, 1);
+		this.tableData._updateChangeSubscription();
+
+		for (let i = 0; i < this.tableData.data.length; i++) {
+			this.subscription.push(this.tableFormGroup.get("rows").get(`${i}`).valueChanges.subscribe((newVal) => {
+				console.log(newVal);
+			}));
+		}
+
+		console.log(this.tableData.data)
 	}
 
 	ngOnInit() {
@@ -61,10 +81,10 @@ export class AppComponent implements OnInit{
 
 			this.setRows();
 
-			for (let i=0; i<this.data.length; i++) {
-				this.tableFormGroup.get("rows").get(`${i}`).valueChanges.subscribe((newVal) => {
+			for (let i = 0; i < this.data.length; i++) {
+				this.subscription.push(this.tableFormGroup.get("rows").get(`${i}`).valueChanges.subscribe((newVal) => {
 					console.log(newVal);
-				});
+				}));
 			}
 		});
 	}
@@ -91,7 +111,8 @@ export class AppComponent implements OnInit{
 		const formCtrl = this.tableFormGroup.get('rows') as FormArray;
 		formCtrl.push(this.getRows(null));
 		this.tableData.data.push(this.getRows(null).value);
-		this.tableData = new MatTableDataSource<any>(this.data);
+		this.tableData._updateChangeSubscription();
+
 
 		console.log(this.tableFormGroup.value)
 
