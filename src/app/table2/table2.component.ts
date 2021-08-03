@@ -111,7 +111,7 @@ export class Table2Component implements OnInit {
 			name: [{value: row ? row.name : "", disabled: true}, Validators.required],
 			subject: [{value: row ? row.subject : "", disabled: true}],
 			marks: [{value: row ? row.marks : 0, disabled: true}, Validators.min(40)],
-			passed: [{value: row ? row.passed : false, disabled: true}, Validators.requiredTrue],
+			passed: [{value: row ? row.passed : false, disabled: false}, Validators.requiredTrue],
 		})
 	}
 
