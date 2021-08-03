@@ -36,6 +36,7 @@ export class Table2Component implements OnInit {
 
 	tableFormGroup: FormGroup;
 	renderedRows;
+	isEditing: boolean = false;
 
 	subscription: Subscription[] = [];
 
@@ -124,8 +125,14 @@ export class Table2Component implements OnInit {
 	}
 
 	edit(row: FormGroup, i) {
-		if (row.enabled) row.disable();
-		else if (row.disabled) row.enable();
+		if (row.enabled) {
+			row.disable();
+			this.isEditing = false;
+		}
+		else if (row.disabled) {
+			row.enable();
+			this.isEditing = true;
+		}
 	}
 
 	delete(row, i) {

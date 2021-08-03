@@ -27,7 +27,7 @@
 						Edit
 					</button>
 
-					<button mat-button (click)="delete(row, i)">
+					<button mat-button (click)="delete(row, i)" [disabled]="isEditing">
 						Delete
 					</button>
 				</td>
