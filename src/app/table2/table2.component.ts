@@ -55,12 +55,14 @@ export class Table2Component implements OnInit {
 	}
 
 	isInvalid(row: FormGroup): boolean {
+		if (row.status === "DISABLED") return true;
 		return row.invalid;
 	}
 
 	submit(row: FormGroup, i: number) {
+		row.disable();
 		console.log(i);
-		console.log(row.value);
+		console.log(row.getRawValue());
 	}
 
 	ngOnInit() {
@@ -121,7 +123,7 @@ export class Table2Component implements OnInit {
 
 	logData() {
 		console.log(this.tableData.data);
-		console.log(this.tableFormGroup.value);
+		console.log(this.tableFormGroup.getRawValue());
 	}
 
 	edit(row: FormGroup, i) {
@@ -149,5 +151,11 @@ export class Table2Component implements OnInit {
 
 		formCtrl.removeAt(ix);
 		this.tableData._updateChangeSubscription();
+	}
+
+	enable(row, i, column: string) {
+		console.log(row.getRawValue())
+		row.get(column).enable();
+		console.log(row.getRawValue())
 	}
 }
