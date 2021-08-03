@@ -1,0 +1,30 @@
+[
+	{
+		"id": "10",
+		"name": "Yoko",
+		"subject": "Maths",
+		"marks": 500,
+		"passed": true
+	},
+	{
+		"id":  "20",
+		"name": "Linda",
+		"subject": "Phy",
+		"marks": 300,
+		"passed": false
+	},
+	{
+		"id":  "30",
+		"name": "Pattie",
+		"subject": "History",
+		"marks": 700,
+		"passed": true
+	},
+	{
+		"id":  "40",
+		"name": "Maurine",
+		"subject": "Geo",
+		"marks": 900,
+		"passed": false
+	}
+]

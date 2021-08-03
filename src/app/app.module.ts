@@ -8,10 +8,12 @@ import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {MatButtonModule} from "@angular/material/button";
 import {MatSortModule} from "@angular/material/sort";
+import { Table2Component } from './table2/table2.component';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    Table2Component
   ],
 	imports: [
 		BrowserModule,
@@ -24,6 +26,6 @@ import {MatSortModule} from "@angular/material/sort";
   providers: [
   	MatTableModule
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [Table2Component]
 })
 export class AppModule { }
