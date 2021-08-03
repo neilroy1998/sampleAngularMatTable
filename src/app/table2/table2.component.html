@@ -22,6 +22,14 @@
 							[disabled]="isInvalid(row)">
 						Submit
 					</button>
+
+					<button mat-button (click)="edit(row, i)">
+						Edit
+					</button>
+
+					<button mat-button (click)="delete(row, i)">
+						Delete
+					</button>
 				</td>
 			</ng-container>
 

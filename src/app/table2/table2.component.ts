@@ -3,8 +3,7 @@ import {MatSort} from '@angular/material/sort';
 import {AbstractControl, Form, FormArray, FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {MatTable, MatTableDataSource} from "@angular/material/table";
 import {Subscription} from "rxjs";
-import { v4 as uuidv4 } from 'uuid';
-
+import {v4 as uuidv4} from 'uuid';
 
 interface schoolMarks {
 	id: String,
@@ -36,6 +35,7 @@ export class Table2Component implements OnInit {
 	];
 
 	tableFormGroup: FormGroup;
+	renderedRows;
 
 	subscription: Subscription[] = [];
 
@@ -71,11 +71,11 @@ export class Table2Component implements OnInit {
 			this.setRows(true);
 		});
 
-		setTimeout(() => {
+		/*setTimeout(() => {
 			this.getData("../assets/data/data2.json").then((res) => {
 				this.setRows(true);
 			});
-		}, 5000)
+		}, 5000)*/
 	}
 
 	setRows(clear = false) {
@@ -94,6 +94,8 @@ export class Table2Component implements OnInit {
 			else return item.value[property];
 		}
 		this.tableData.sort = this.sort;
+
+		this.tableData.connect().subscribe(d => this.renderedRows = d);
 	}
 
 	ac2fa(grp: AbstractControl): FormArray {
@@ -102,11 +104,11 @@ export class Table2Component implements OnInit {
 
 	getRows(row: schoolMarks): FormGroup {
 		return this.fb.group({
-			id: [row ? row.id : uuidv4(), Validators.required],
-			name: [row ? row.name : "", Validators.required],
-			subject: [row ? row.subject : ""],
-			marks: [row ? row.marks : 0, Validators.min(40)],
-			passed: [row ? row.passed : false, Validators.requiredTrue],
+			id: [{value: row ? row.id : uuidv4(), disabled: true}, Validators.required],
+			name: [{value: row ? row.name : "", disabled: true}, Validators.required],
+			subject: [{value: row ? row.subject : "", disabled: true}],
+			marks: [{value: row ? row.marks : 0, disabled: true}, Validators.min(40)],
+			passed: [{value: row ? row.passed : false, disabled: true}, Validators.requiredTrue],
 		})
 	}
 
@@ -121,4 +123,24 @@ export class Table2Component implements OnInit {
 		console.log(this.tableFormGroup.value);
 	}
 
+	edit(row: FormGroup, i) {
+		if (row.enabled) row.disable();
+		else if (row.disabled) row.enable();
+	}
+
+	delete(row, i) {
+		let formCtrl = this.tableFormGroup.get('rows') as FormArray;
+		let ix: number;
+		formCtrl.value.find((val, i) => {
+			if (val.id === row.value.id) {
+				ix = i;
+				return;
+			}
+		});
+
+		console.log(ix);
+
+		formCtrl.removeAt(ix);
+		this.tableData._updateChangeSubscription();
+	}
 }
