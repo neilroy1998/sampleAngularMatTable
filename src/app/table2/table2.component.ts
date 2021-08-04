@@ -10,7 +10,10 @@ interface schoolMarks {
 	name: String,
 	subject: String,
 	marks: number,
-	passed: boolean
+	passed: boolean,
+	misc: {
+		name: String
+	}
 }
 
 @Component({
@@ -31,7 +34,8 @@ export class Table2Component implements OnInit {
 		"name",
 		"subject",
 		"marks",
-		"passed"
+		"passed",
+		"misc.name"
 	];
 
 	tableFormGroup: FormGroup;
@@ -64,7 +68,8 @@ export class Table2Component implements OnInit {
 	}
 
 	setPassedCheck(row: FormGroup, event) {
-		row.get('passed').setValue(event.target.checked)
+		console.log("!!");
+		row.get('passed').setValue(!row.get("passed").value)
 	}
 
 	submit(row: FormGroup, i: number) {
@@ -101,8 +106,12 @@ export class Table2Component implements OnInit {
 		this.data.forEach((d) => {
 			formCtrl.push(this.getRows(d));
 		});
+
 		this.tableData = new MatTableDataSource<any>((<FormArray>this.tableFormGroup.get("rows")).controls);
 		this.tableData.sortingDataAccessor = (item, property) => {
+			if (property.includes("misc.")) return (<FormGroup>item)
+													.value[property.split('.')[1]]
+													.toLowerCase();
 			if (typeof item.value[property] === "string") return item.value[property].toLowerCase();
 			else return item.value[property];
 		}
@@ -122,6 +131,9 @@ export class Table2Component implements OnInit {
 			subject: [{value: row ? row.subject : "", disabled: true}],
 			marks: [{value: row ? row.marks : 0, disabled: true}, Validators.min(40)],
 			passed: [{value: row ? row.passed : false, disabled: true}, Validators.requiredTrue],
+			misc: this.fb.group({
+				name: [{value: row ? row.misc.name : "", disabled: true}]
+			})
 		})
 	}
 
