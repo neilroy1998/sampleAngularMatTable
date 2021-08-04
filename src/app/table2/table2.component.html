@@ -2,7 +2,7 @@
 	<h1>Table</h1>
 
 	<button (click)="addRow()">Add Row</button>
-	<button (click)="logData()" >Log</button>
+	<button (click)="logData()">Log</button>
 
 	<form [formGroup]="tableFormGroup">
 
@@ -16,8 +16,8 @@
 
 			<!--		SECTION action-->
 			<ng-container matColumnDef="action">
-				<th mat-header-cell *matHeaderCellDef> Action </th>
-				<td mat-cell *matCellDef="let row; let i = index" [formGroupName]="i">
+				<th mat-header-cell *matHeaderCellDef> Action</th>
+				<td mat-cell *matCellDef="let row; let i = index;" [formGroupName]="i">
 					<button mat-button (click)="submit(row, i)"
 							[disabled]="isInvalid(row)">
 						Submit
@@ -35,9 +35,9 @@
 
 			<!--		SECTION Name-->
 			<ng-container matColumnDef="name">
-				<th mat-header-cell *matHeaderCellDef mat-sort-header> Name </th>
+				<th mat-header-cell *matHeaderCellDef mat-sort-header> Name</th>
 				<td mat-cell *matCellDef="let row; let i = index" [formGroupName]="i"
-				(dblclick)="enableCell(row, i, 'name', $event)">
+					(dblclick)="enableCell(row, i, 'name', $event)">
 					<p *ngIf="row.get('name').disabled">{{ row.get('name').value }}</p>
 					<input *ngIf="row.get('name').enabled" type="text" formControlName="name">
 				</td>
@@ -45,7 +45,7 @@
 
 			<!--		SECTION Sub-->
 			<ng-container matColumnDef="subject">
-				<th mat-header-cell *matHeaderCellDef mat-sort-header> Sub </th>
+				<th mat-header-cell *matHeaderCellDef mat-sort-header> Sub</th>
 				<td mat-cell *matCellDef="let row; let i = index" [formGroupName]="i"
 					(dblclick)="enableCell(row, i, 'subject', $event)">
 					<p *ngIf="row.get('subject').disabled">{{ row.get('subject').value }}</p>
@@ -55,17 +55,21 @@
 
 			<!--		SECTION Marks-->
 			<ng-container matColumnDef="marks">
-				<th mat-header-cell *matHeaderCellDef mat-sort-header> Marks </th>
+				<th mat-header-cell *matHeaderCellDef mat-sort-header> Marks</th>
 				<td mat-cell *matCellDef="let row; let i = index" [formGroupName]="i"
 					(dblclick)="enableCell(row, i, 'marks', $event)">
 					<p *ngIf="row.get('marks').disabled">{{ row.get('marks').value }}</p>
-					<input *ngIf="row.get('marks').enabled" type="text" formControlName="marks">
+					<div style="outline: none" *ngIf="row.get('marks').enabled" tabindex="-1" class="marks-div"
+						 (blur)="blurDiv(row, i, $event)">
+						<input type="text" formControlName="marks">
+						<input type="text">
+					</div>
 				</td>
 			</ng-container>
 
 			<!--		SECTION Passed-->
 			<ng-container matColumnDef="passed">
-				<th mat-header-cell *matHeaderCellDef mat-sort-header> Passed </th>
+				<th mat-header-cell *matHeaderCellDef mat-sort-header> Passed</th>
 				<td mat-cell *matCellDef="let row; let i = index" [formGroupName]="i"
 					(click)="setPassedCheck(row, $event)">
 					<input type="checkbox"
@@ -74,9 +78,9 @@
 				</td>
 			</ng-container>
 
-<!--			SECTION Misc Name-->
+			<!--			SECTION Misc Name-->
 			<ng-container matColumnDef="misc.name">
-				<th mat-header-cell *matHeaderCellDef mat-sort-header> Misc.Name </th>
+				<th mat-header-cell *matHeaderCellDef mat-sort-header> Misc.Name</th>
 				<td mat-cell *matCellDef="let row; let i = index" [formGroupName]="i"
 					(dblclick)="enableCell(row, i, 'misc.name', $event)">
 					<ng-container formGroupName="misc">

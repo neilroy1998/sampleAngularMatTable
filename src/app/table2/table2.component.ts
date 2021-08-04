@@ -43,6 +43,7 @@ export class Table2Component implements OnInit {
 	isEditing: boolean = false;
 
 	subscription: Subscription[] = [];
+	console = console;
 
 	constructor(private fb: FormBuilder,
 				private cdr: ChangeDetectorRef) {
@@ -108,10 +109,13 @@ export class Table2Component implements OnInit {
 		});
 
 		this.tableData = new MatTableDataSource<any>((<FormArray>this.tableFormGroup.get("rows")).controls);
+
+		console.warn(this.tableData);
+
 		this.tableData.sortingDataAccessor = (item, property) => {
 			if (property.includes("misc.")) return (<FormGroup>item)
-													.value[property.split('.')[1]]
-													.toLowerCase();
+				.value[property.split('.')[1]]
+				.toLowerCase();
 			if (typeof item.value[property] === "string") return item.value[property].toLowerCase();
 			else return item.value[property];
 		}
@@ -153,8 +157,7 @@ export class Table2Component implements OnInit {
 		if (row.enabled) {
 			row.disable();
 			this.isEditing = false;
-		}
-		else if (row.disabled) {
+		} else if (row.disabled) {
 			row.enable();
 			this.isEditing = true;
 		}
@@ -178,16 +181,27 @@ export class Table2Component implements OnInit {
 		this.tableData._updateChangeSubscription();
 	}
 
+	trackRow(index: number, item: schoolMarks): string {
+		return `${item.id}`;
+	}
+
 	enableCell(row, i, column: string, event) {
 		this.isEditing = true;
 		row.get(column).enable();
 		setTimeout(() => {
 			const inputElement = (<HTMLTableDataCellElement>event.path[1])
-				.getElementsByTagName('input')[0];
-			inputElement.addEventListener("blur", (event) => {
-				console.log("BLURRED")
-				this.submit(row, i);
+				.getElementsByTagName("input");
+			(<HTMLInputElement>inputElement[0]).focus();
+
+			Array.from(inputElement).forEach((ele) => {
+				ele.addEventListener("blur", (event) => {
+					if (event.relatedTarget == null) {
+						console.log(event);
+						this.submit(row, i);
+					}
+				})
 			})
+
 		}, 0)
 	}
 }
