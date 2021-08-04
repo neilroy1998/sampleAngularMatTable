@@ -1,6 +1,6 @@
 import {ChangeDetectorRef, Component, OnInit, ViewChild} from '@angular/core';
 import {MatSort} from '@angular/material/sort';
-import {AbstractControl, Form, FormArray, FormBuilder, FormGroup, Validators} from "@angular/forms";
+import {AbstractControl, Form, FormArray, FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {MatTable, MatTableDataSource} from "@angular/material/table";
 import {Subscription} from "rxjs";
 import {v4 as uuidv4} from 'uuid';
@@ -59,8 +59,18 @@ export class Table2Component implements OnInit {
 		return row.invalid;
 	}
 
+	str2Bool(str: String): boolean {
+		return str as unknown as boolean;
+	}
+
+	setPassedCheck(row: FormGroup, event) {
+		row.get('passed').setValue(event.target.checked)
+	}
+
 	submit(row: FormGroup, i: number) {
 		row.disable();
+		//row.get('passed').enable();
+		this.isEditing = false;
 		console.log(i);
 		console.log(row.getRawValue());
 	}
@@ -111,7 +121,7 @@ export class Table2Component implements OnInit {
 			name: [{value: row ? row.name : "", disabled: true}, Validators.required],
 			subject: [{value: row ? row.subject : "", disabled: true}],
 			marks: [{value: row ? row.marks : 0, disabled: true}, Validators.min(40)],
-			passed: [{value: row ? row.passed : false, disabled: false}, Validators.requiredTrue],
+			passed: [{value: row ? row.passed : false, disabled: true}, Validators.requiredTrue],
 		})
 	}
 
@@ -127,6 +137,7 @@ export class Table2Component implements OnInit {
 	}
 
 	edit(row: FormGroup, i) {
+
 		if (row.enabled) {
 			row.disable();
 			this.isEditing = false;
@@ -135,6 +146,8 @@ export class Table2Component implements OnInit {
 			row.enable();
 			this.isEditing = true;
 		}
+		//row.get('passed').enable();
+
 	}
 
 	delete(row, i) {
@@ -153,9 +166,16 @@ export class Table2Component implements OnInit {
 		this.tableData._updateChangeSubscription();
 	}
 
-	enable(row, i, column: string) {
-		console.log(row.getRawValue())
+	enableCell(row, i, column: string, event) {
+		this.isEditing = true;
 		row.get(column).enable();
-		console.log(row.getRawValue())
+		setTimeout(() => {
+			const inputElement = (<HTMLTableDataCellElement>event.path[1])
+				.getElementsByTagName('input')[0];
+			inputElement.addEventListener("blur", (event) => {
+				console.log("BLURRED")
+				this.submit(row, i);
+			})
+		}, 0)
 	}
 }

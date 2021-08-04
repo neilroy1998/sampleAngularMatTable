@@ -1,7 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 
-import {ReactiveFormsModule} from "@angular/forms";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import { MatTableModule } from "@angular/material/table";
 
 import { AppComponent } from './app.component';
@@ -21,7 +21,8 @@ import { Table2Component } from './table2/table2.component';
 		BrowserAnimationsModule,
 		MatTableModule,
 		MatButtonModule,
-		MatSortModule
+		MatSortModule,
+		FormsModule
 	],
   providers: [
   	MatTableModule
